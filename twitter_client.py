@@ -21,14 +21,19 @@ logger = logging.getLogger()
 
 
 def send_tweet(ticket, token, token_secret, consumer_key, consumer_secret):
-    logger.info("tweeting the release")
-    #FIXME we need a nicer solution for this but it is christmas
-    
-    if ticket['EncodingProfile.Slug'] == "hd":
-        target = "media.ccc.de and youtube"
-    else:
-        target = "media.ccc.de"
-        
+
+    targetList = [ ]
+    if ticket['Publishing.YouTube.Enable'] == "yes" and ticket['Publishing.YouTube.EnableProfile'] == "yes" :
+        targetList.append("YouTube")
+    if ticket['Publishing.Media.Enable'] == "yes" and ticket['Publishing.Media.EnableProfile'] == "yes" :
+        targetList.append("media.ccc.de")
+
+    if len(targetList) <= 0:
+        logger.info("NOT tweeting the release")
+        return
+
+    target = " and ".join(targetList)
+    logger.info("tweeting the release on target: '{0}'".format(target))
     msg = " has been released as " + str(ticket['EncodingProfile.Slug']) + " on " + target
     title = str(ticket['Fahrplan.Title'])
     if len(title) >= (160 - len(msg)):
