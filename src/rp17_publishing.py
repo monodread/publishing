@@ -93,7 +93,7 @@ class Publisher:
             raise NameError('Config parameter missing or empty, please check config')
 
         try:
-            self.ticket = self._create_rp_ticket(rp_session_id)
+            self.ticket = self.rp._create_rp_ticket(rp_session_id)
         except Exception as e_:
             raise NameError('Could not create ticket')
 
@@ -295,7 +295,7 @@ class Publisher:
             except Exception as e_:
                 #raise PublisherException('creating recording ' + out_path) from e_
                 raise NameError('creating recording ' + out_path)
-                
+
     def _publish_to_youtube(self):
         """
         Publish the file to YouTube.
